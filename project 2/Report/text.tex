@@ -1,0 +1,317 @@
+\documentclass[12pt]{article}
+\usepackage[greek,english]{babel}
+\usepackage{alphabeta}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[backend=biber]{biblatex}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{blindtext}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{steinmetz}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tikz}
+\usepackage{fdsymbol}
+\geometry{
+    a4paper,
+    total={170mm,257mm},
+    left=20mm,
+    top=20mm,
+}
+
+\author{Αυγερινός Πέτρος 03115074}
+\title{Συστήματα Αναμονής Άσκηση 2^η}
+\date{}
+
+\begin{document}
+\maketitle 
+\pagebreak
+
+\tableofcontents
+
+
+\pagebreak
+
+\section{Θεωρητική Μελέτη της ουράς Μ/Μ/1}
+
+\subsection{Ερώτημα Α}
+Η απαραίτητη συνθήκη για μία ουρά Μ/Μ/1 να είναι εργοδική είναι η ένταση
+κυκλοφορίας $\rho = \frac{\lambda}{\mu} < 1$. Η ένταση κυκλοφορίας εκφράζει
+την πιθανότητα να είναι απασχολημένη η μονάδα εξυπηρέτησης.
+
+Γνωρίζουμε ότι οι εξισώσεις ισορροπίας είναι: 
+\begin{equation}
+    (\lambda_k + \mu_k)P_k = \lambda_{k-1}P_{k-1} + \mu_{k+1}P_{k+1},  k \ge 1
+\end{equation}
+
+και 
+
+\begin{equation}
+    \lambda_0P_0 = \mu_1P_1
+\end{equation}
+
+Για την ουρά Μ/Μ/1 ισχύει ότι $\lambda_k = \lambda, \mu_k = \mu, \forall k \ge 1$.
+Επομένως οι εξισώσεις ισορροπίας γίνονται:
+\begin{equation}
+    \lambda P_0 = \mu P_1 \Rightarrow P_1 = \frac{\lambda}{\mu}P_0 = \rho P_0
+\end{equation}
+
+και
+
+\begin{equation}
+    P_k = \rho P_{k-1} = \rho^k P_0, k > 0
+\end{equation}
+
+Όμως η άθροιση των πιθανοτήτων πρέπει να είναι 1, δηλαδή:
+\begin{equation}
+    \sum_{k=0}^{\infty} P_k = 1 \Rightarrow P_0 \sum_{k=0}^{\infty} \rho^k = 1 \Rightarrow P_0 \frac{1}{1-\rho} = 1 \Rightarrow P_0 = 1 - \rho
+\end{equation}
+
+Επομένως προκύπτει η πιθανότητα $P_k$:
+\begin{equation}
+    P_k = (1-\rho)\rho^k
+\end{equation}
+
+Το διάγραμμα ρυθμού μεταβάσεων της ουράς Μ/Μ/1 φαίνεται στο Σχήμα: 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{../Images/task1ask1.png}
+    \caption{Διάγραμμα Ρυθμού Μεταβάσεων Μ/Μ/1}
+    \label{fig:task1ask1}
+\end{figure}
+
+\subsection{Ερώτημα Β}
+
+Για τον υπολογισμό του μέσου χρόνου καθυστέρησης στην ουρά Μ/Μ/1 χρησιμοποιούμε τον τύπο:
+\begin{equation}
+    Ε(Τ) = \frac{1}{\mu} \cdot \frac{1}{1-\rho}
+\end{equation}
+
+Ο μέσος χρόνος αναμονής είναι ίσος με:
+\begin{equation}
+    Ε(W) = Ε(T) - \frac{1}{\mu} = \frac{1}{\mu} \cdot \frac{\rho}{1-\rho}
+\end{equation}
+
+\subsection{Ερώτημα Γ}
+Για να υπολογίσουμε την πιθανότητα να υπάρχουν 3 τουλάχιστον πελάτες στο σύστημα θα 
+εργαστούμε ως εξής: 
+
+\begin{equation}
+    P(N \ge 3) = \sum_{k=3}^{\infty} P_k = \sum_{k=3}^{\infty} (1-\rho)\rho^k
+\end{equation}
+
+Αυτή η πιθανότητα μπορεί να υπολογιστεί ως η εξής συμπληρωματική πιθανότητα: 
+
+\begin{equation}
+    P(N \ge 3) = 1 - P(N < 3) = 1 - P(N = 0) - P(N = 1) - P(N = 2)
+\end{equation}
+
+Για ένα δεδομένο ρ όπου $\rho < 1$.
+
+\subsection{Ερώτημα Δ}
+Για να υπολογίσουμε την πιθανότητα να βρεθεί το σύστημα με 107 πελάτες στην ουρά θα 
+χρησιμοποιήσουμε την παρακάτω εξίσωση:
+
+\begin{equation}
+    P_{107} = (1-\rho)\rho^{107}
+\end{equation}
+
+Για τιμές του ρ όπου $\rho \le 1$ οι πιθανότητες είναι πολύ μικρές. Βέβαια όσο μεγαλώνει το 
+$\rho$ τόσο περισσότερο αυξάνεται και η πιθανότητα αυτή. Σαφώς για μικρά $\rho$ η πιθανότητα 
+είναι αμελητέα.
+
+Για παράδειγμα:
+\begin{enumerate}
+    \item{Για $\rho = 0.1$ η πιθανότητα είναι $9.000000000000054e-108$.}
+    \item{Για $\rho = 0.5$ η πιθανότητα είναι $3.0814879110195774e-33$.}
+    \item{Για $\rho = 0.9$ η πιθανότητα είναι $1.270423474759657e-06$.}
+\end{enumerate}
+
+\pagebreak
+
+\section{Ανάλυση ουράς Μ/Μ/1 με Octave}
+
+\subsection{Ερώτημα Α}
+
+Για να είναι το σύστημα εργοδικό θα πρέπει να ισχύει ότι $\rho = \frac{\lambda}{\mu} < 1$.
+Γνωρίζουμε ότι το $\lambda = 10 \text{πελάτες/min}$ ενώ το $\mu$ εκτείνεται σε εύρος τιμών 
+από 0 έως 20 πελάτες ανά λεπτό. Επομένως αποδεκτές τιμές του $\mu$ είναι από 10 έως 20.
+
+Άρα θα πρεπει $\mu > 10$.
+
+\subsection{Ερώτημα Β}
+
+Θα κάνουμε χρήση της συνάρτησης qsmm1 του Octave για να λάβουμε όλα τα απαραίτητα στοιχεία 
+για την ουρά μας.
+
+Ο κώδικας αρχικοποίησης της ουράς είναι ο εξής:
+
+\begin{lstlisting}[language=C,
+                   frame=single,
+                   numberstyle=\color{codegray},
+                   basicstyle=\footnotesize,
+                   numbers=left,
+                   backgroundcolor=\color{lightgray},
+                   numbersep=5pt]
+pkg load queueing;
+
+lambda = 10;
+
+mu = 10.0001 : 0.0001 : 20;
+
+[U, R, Q, X, p0] = qsmm1(lambda, mu);
+
+colors = "rgbm";
+\end{lstlisting}
+
+\pagebreak
+
+Για κάθε ένα από τα ζητούμενα της άσκησης έχουμε:
+\begin{enumerate}
+    \item{}
+        Σχετικά με το utilisation, το διάγραμμα που προκύπτει είναι το εξής:
+        \begin{center}
+            \includegraphics[scale=0.6]{../Images/utilisation.jpg}
+        \end{center}
+
+        Ο κώδικας που χρησιμοποιήθηκε για το παραπάνω διάγραμμα είναι ο εξής:
+            \begin{lstlisting}[language=C,
+                               frame=single,
+                               numberstyle=\color{codegray},
+                               basicstyle=\footnotesize,
+                               numbers=left,
+                               backgroundcolor=\color{lightgray},
+                               numbersep=5pt]
+figure(1); 
+plot(mu,U,colors(1),'linewidth',1.2);
+xlabel('Service Rate');
+ylabel('Utilisation');
+title('Utilisation');
+
+print('-djpg', 'utilisation.jpg');
+            \end{lstlisting}
+
+    \pagebreak
+    \item{}
+        Σχετικά με το μέσο χρόνο καθυστέρησης, το διάγραμμα που προκύπτει είναι το εξής:
+        \begin{center}
+            \includegraphics[scale=0.6]{../Images/responsetime.jpg}
+        \end{center}
+
+        Ο κώδικας που χρησιμοποιήθηκε για το παραπάνω διάγραμμα είναι ο εξής:
+            \begin{lstlisting}[language=C,
+                               frame=single,
+                               numberstyle=\color{codegray},
+                               basicstyle=\footnotesize,
+                               numbers=left,
+                               backgroundcolor=\color{lightgray},
+                               numbersep=5pt]
+figure(2);
+plot(mu,R,colors(1),'linewidth',1.2);
+ylim([0,100]);
+xlabel('Service Rate');
+ylabel('Response Time');
+title('Response Time');
+
+print('-djpg', 'responsetime.jpg');
+            \end{lstlisting}
+
+    \pagebreak
+    \item{}
+        Σχετικά με το μέσο αριθμό των πελατών, το διάγραμμα που προκύπτει είναι το εξής:
+        \begin{center}
+            \includegraphics[scale=0.6]{../Images/average_n_requests.jpg}
+        \end{center}
+
+        Ο κώδικας που χρησιμοποιήθηκε για το παραπάνω διάγραμμα είναι ο εξής:
+            \begin{lstlisting}[language=C,
+                               frame=single,
+                               numberstyle=\color{codegray},
+                               basicstyle=\footnotesize,
+                               numbers=left,
+                               backgroundcolor=\color{lightgray},
+                               numbersep=5pt]
+figure(3); 
+plot(mu,Q,colors(1),'linewidth',1.2);
+ylim([0,100]);
+xlabel('Service Rate');
+ylabel('Average number of requests');
+
+print('-djpg', 'average_n_requests.jpg');
+            \end{lstlisting}
+
+    \pagebreak
+    \item{}
+        Σχετικά με τη ρυθμαπόδοση, το διάγραμμα που προκύπτει είναι το εξής:
+        \begin{center}
+            \includegraphics[scale=0.6]{../Images/throughput.jpg}
+        \end{center}
+
+        Ο κώδικας που χρησιμοποιήθηκε για το παραπάνω διάγραμμα είναι ο εξής:
+            \begin{lstlisting}[language=C,
+                               frame=single,
+                               numberstyle=\color{codegray},
+                               basicstyle=\footnotesize,
+                               numbers=left,
+                               backgroundcolor=\color{lightgray},
+                               numbersep=5pt]
+figure(4);
+plot(mu,X,colors(1), 'linewidth',1.2);
+xlabel('Service Rate');
+ylabel('Throughput');
+
+print('-djpg', 'throughput.jpg');
+            \end{lstlisting}
+
+
+\end{enumerate}
+
+\subsection{Ερώτημα Γ}
+Ο μέσος χρόνος εξυπηρέτησης είναι αντιστρόφος ανάλογος του ρυθμού εξυπηρέτησης, 
+επομένως για μεγάλα $\mu$ ο μέσος χρόνος εξυπηρέτησης είναι μικρός. Η αύξηση 
+του ρυθμού εξυπηρέτησης όμως απαιτεί σημαντική ποσότητα πόρων, επομένως η αύξηση 
+του ρυθμού θα πρέπει να γίνει με τέτοιο τρόπο ώστε να μειωθεί ο χρόνος εξυπηρέτησεις 
+αλλά να μην αυξηθούν σημαντικά οι ανάγκες της ουράς για πόρους. Επομένως από το 
+διάγραμα θα επέλεγα το $\mu = 12$ για το οποίο υπάρχει ένας ανεπέστατος χρόνος 
+εξυπηρέτησης. Αλλιώς μπορούμε να επιλέξουμε και την μέση λύση του $\mu = 15$.
+
+
+\subsection{Ερώτημα Δ}
+Το throughput στην ουρα παρατηρούμε ότι μένει σταθερό για όλες τις τιμές του $\mu$.
+Αυτό συμβαίνει γιατί η ρυθμαπόδοση εξαρτάται από την παράμετρο $\lambda$ και την 
+πιθανότητα απώλειας η οποία είναι 0 σε μία Μ/Μ/1 ουρά η οποία έχει άπειρη χωρητικότητα.
+
+\pagebreak
+
+\section{Διαδικασία γεννήσεων θανάτων (birth-death process): εφαρμογή σε σύστημα
+Μ/Μ/1/Κ}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
