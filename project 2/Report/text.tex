@@ -294,6 +294,276 @@ print('-djpg', 'throughput.jpg');
 \section{Διαδικασία γεννήσεων θανάτων (birth-death process): εφαρμογή σε σύστημα
 Μ/Μ/1/Κ}
 
+\subsection{Ερώτημα Α}
+
+Αρχικά έχουμε τα εξής γνωστά:
+\begin{enumerate}
+    \item{Γνωρίζουμε ότι $\lambda = 5$ και $\mu = 10$}
+    \item{Γνωρίζουμε επίσης ότι $\lambda_i = \frac{\lambda}{(i+2)}$ και $\mu_i = \mu, i = 0,1,2$}
+\end{enumerate}
+
+Από τις εξισώσεις ισορροπίας και την συνθήκη κανονικοποίησης έχουμε τις
+εξής εργοδικές πιθανότητες για την ουρά Μ/Μ/1/3: 
+\begin{equation}
+    P_0 = \frac{1}{1 + \frac{\lambda_0}{\mu} + \frac{\lambda_0\lambda_1}{\mu^2} + \frac{\lambda_0\lambda_1\lambda_2}{\mu^3}} = 0.771084337
+\end{equation}
+
+\begin{equation}
+    P_1 = \frac{\lambda_0}{\mu}P_0 = 0.19275
+\end{equation}
+
+\begin{equation}
+    P_2 = \frac{\lambda_1}{\mu}P_1 = 0.032125
+\end{equation}
+
+\begin{equation}
+    P_3 = \frac{\lambda_2}{\mu}P_2 = 0.004015625
+\end{equation}
+
+Γνωρίζουμε ότι $P_{blocking} = P_3$.\\
+
+
+Το διάγραμμα γεννήσεων-θανάτων για μία ουρά Μ/Μ/1/3 φαίνεται στο παρακάτω σχήμα:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{../Images/birth_death_diagram.png}
+    \caption{Διάγραμμα Γεννήσεων-Θανάτων Μ/Μ/1/3}
+    \label{fig:task3ask1}
+\end{figure}
+
+
+\pagebreak
+\subsection{Ερώτημα Β}
+
+\begin{enumerate}
+    \item{}
+        Η μήτρα ρυθμού μεταβάσεων φαίνεται παρακάτω:\\
+        \begin{table}[h!]
+          \centering
+          \begin{tabular}{|c|c|c|c|}
+            \hline
+              -2.50000&   2.50000&   0.00000&   0.00000 \\
+              10.00000& -11.66667&   1.66667&   0.00000 \\
+               0.00000&  10.00000& -11.25000&   1.25000 \\
+               0.00000&   0.00000&  10.00000& -10.00000 \\
+            \hline
+          \end{tabular}
+        \end{table}
+
+    \item{}
+        Οι εργοδικές πιθανότητες φαίνονται παρακάτω στο διάγραμμα:\\
+        \begin{center}
+            \includegraphics[scale=0.6]{../Images/bar_plot.jpg}
+        \end{center}
+
+        Και σε συγκεκριμένες τιμές εδώ:\\
+        \begin{table}[h!]
+          \centering
+          \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            $P_0$ & $P_1$ & $P_2$ & $P_3$ & $P_{blocking}$ \\ \hline
+            0.771084 & 0.192771 & 0.0321285 & 0.00401606 & 0.00401606 \\
+            \hline
+          \end{tabular}
+        \end{table}
+
+    \item{}
+        Η πιθανότητα απόρριψης είναι $P_{blocking} = 0.00401606$.
+
+    \item{}
+        Ο μέσος αριθμός πελατών στην ουρά είναι $0.26908$ σύμφωνα με τον τύπο:
+        \begin{equation}
+            L = \sum_{i=0}^{3} i \cdot P_i
+        \end{equation}
+
+    \item{}
+        Ο μέσος αριθμός εξυπηρετούμενων πελατών σε ένα διάστημα χρόνου ίσο με 60 δευτερόλεπτα είναι:
+        \begin{equation}
+            L_s = L \cdot \mu \cdot 60 = 161.448
+        \end{equation}
+
+    \item{}
+        Παρακάτω φαίνονται τα διαγράμματα  των πιθανοτήτων καταστάσεων:
+        \begin{enumerate}
+            \item{}
+                \begin{center}
+                    \includegraphics[scale=0.4]{../Images/probability_0_5_10.jpg}
+                \end{center}
+            \item{}
+                \begin{center}
+                    \includegraphics[scale=0.4]{../Images/probability_1_5_10.jpg}
+                \end{center}
+            \item{}
+                \begin{center}
+                    \includegraphics[scale=0.4]{../Images/probability_2_5_10.jpg}
+                \end{center}
+            \item{}
+                \begin{center}
+                    \includegraphics[scale=0.4]{../Images/probability_3_5_10.jpg}
+                \end{center}
+        \end{enumerate}
+Ο κώδικας που χρησιμοποιήθηκε για τα παραπάνω φαίνεται παρακάτω:
+
+\begin{lstlisting}[language=C,
+                   frame=single,
+                   numberstyle=\color{codegray},
+                   basicstyle=\footnotesize,
+                   numbers=left,
+                   backgroundcolor=\color{lightgray},
+                   numbersep=5pt]
+% system M/M/1/3
+
+clc;
+clear all;
+close all;
+
+pkg load queueing;
+
+lambda = 5;
+mu = 10;
+states = [0, 1, 2, 3]; % system with capacity 4 states
+% the initial state of the system. The system is initially empty.
+initial_state = [1, 0, 0, 0];
+
+% define the birth and death rates between the states of the system.
+births_B = [lambda/2, lambda/3, lambda/4];
+deaths_D = [mu, mu, mu];
+
+% get the transition matrix of the birth-death process
+transition_matrix = ctmcbd(births_B, deaths_D);
+display('transition matrix');
+display(transition_matrix);
+% get the ergodic probabilities of the system
+P = ctmc(transition_matrix);
+
+
+% plot the ergodic probabilities (bar for bar chart)
+if mu = 10
+	figure(1);
+	bar(states, P, "r", 0.5);
+	xlabel('States');
+	ylabel('Propabilities');
+	
+	print('-djpg','bar_plot.jpg');
+endif
+
+display('blocking probability');
+display(P(4));
+
+mean_clients = 0;
+for i=1:4
+	mean_clients = mean_clients + P(i)*(i-1);
+	probtext = sprintf('probability %d: %d', i-1, P(i));
+	display(probtext);
+endfor
+display('mean');
+display(mean_clients);
+
+for j=1:4
+	index = 0;
+	for T = 0 : 0.01 : 50
+	  index = index + 1;
+	  P0 = ctmc(transition_matrix, T, initial_state);
+	  Prob0(index) = P0(j);
+	  if P0 - P < 0.01
+	    break;
+	  endif
+	endfor
+
+	T = 0 : 0.01 : T;
+	figure(2);
+	plot(T, Prob0, "r", "linewidth", 1.3);
+	plotname = sprintf('probability %d',j-1);
+	title(plotname);
+	xlabel('time');
+	ylabel('probability');
+	filename = sprintf('probability_%d_%d_%d.jpg',j-1, lambda, mu);
+
+	print('-djpg', filename);
+endfor
+
+result = mean_clients * mu * 60;
+text = sprintf('mean_clients(%d): %d', mu, result);
+display(text);
+
+\end{lstlisting}
+
+\item{}
+        \begin{enumerate}
+            \item{}
+                Για $mu = 1$, ο συνολικός αριθμός είναι 123.301 και έχουμε τα παρακάτω διαγράμματα:
+                \begin{enumerate}
+                    \item{}
+                        \begin{center}
+                            \includegraphics[scale=0.4]{../Images/probability_0_5_1.jpg}
+                        \end{center}
+                    \item{}
+                        \begin{center}
+                            \includegraphics[scale=0.4]{../Images/probability_1_5_1.jpg}
+                        \end{center}
+                    \item{}
+                        \begin{center}
+                            \includegraphics[scale=0.4]{../Images/probability_2_5_1.jpg}
+                        \end{center}
+                    \item{}
+                        \begin{center}
+                            \includegraphics[scale=0.4]{../Images/probability_3_5_1.jpg}
+                        \end{center}
+                \end{enumerate}
+
+                \item{}
+                    Για $mu = 5$ ο συνολικός αριθμός είναι 168.293 και έχουμε τα παρακάτω διαγράμματα:
+                    \begin{enumerate}
+                        \item{}
+                            \begin{center}
+                                \includegraphics[scale=0.4]{../Images/probability_0_5_5.jpg}
+                            \end{center}
+                        \item{}
+                            \begin{center}
+                                \includegraphics[scale=0.4]{../Images/probability_1_5_5.jpg}
+                            \end{center}
+                        \item{}
+                            \begin{center}
+                                \includegraphics[scale=0.4]{../Images/probability_2_5_5.jpg}
+                            \end{center}
+                        \item{}
+                            \begin{center}
+                                \includegraphics[scale=0.4]{../Images/probability_3_5_5.jpg}
+                            \end{center}
+                    \end{enumerate}
+
+            \item{}
+                Για $mu = 20$ ο συνολικός αριθμός είναι 156.103 και έχουμε τα παρακάτω διαγράμματα:
+                \begin{enumerate}
+                    \item{}
+                        \begin{center}
+                            \includegraphics[scale=0.4]{../Images/probability_0_5_20.jpg}
+                        \end{center}
+                    \item{}
+                        \begin{center}
+                            \includegraphics[scale=0.4]{../Images/probability_1_5_20.jpg}
+                        \end{center}
+                    \item{}
+                        \begin{center}
+                            \includegraphics[scale=0.4]{../Images/probability_2_5_20.jpg}
+                        \end{center}
+                    \item{}
+                        \begin{center}
+                            \includegraphics[scale=0.4]{../Images/probability_3_5_20.jpg}
+                        \end{center}
+                \end{enumerate}
+
+
+        Δημιουργήθηκαν από το κώδικα του προηγούμενου ερωτήματος παραμετροποιώντας το $\mu$.
+        Διατηρώντας σταθερό το $\lambda$ και αυξάνοντας το $\mu$ παρατηρούμε ότι συγκλίνουμε 
+        στις εργοδικές πιθανότητε πιο γρήγορα. Αυτό συμβαίνει γιατί όσο αυξάνεται το $\mu$
+        μειώνονται οι εργοδικές πιθανότητες.\\
+        
+        \pagebreak
+
+\end{enumerate}
+
 
 
 
