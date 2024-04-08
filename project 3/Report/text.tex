@@ -1,0 +1,148 @@
+\documentclass[12pt]{article}
+\usepackage[greek,english]{babel}
+\usepackage{alphabeta}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{blindtext}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{steinmetz}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tikz}
+\usepackage{fdsymbol}
+\geometry{
+    a4paper,
+    total={170mm,257mm},
+    left=20mm,
+    top=20mm,
+}
+
+\author{Αυγερινός Πέτρος 03115074}
+\title{Συστήματα Αναμονής Άσκηση 3^η}
+\date{}
+
+\begin{document}
+\maketitle 
+\pagebreak
+
+\tableofcontents
+\pagebreak
+
+\section{Προσομοίωση 1}
+\subsection{Ερώτημα 1}
+
+Στο πρώτο ερώτημα ζητείται να υλοποιηθεί η προσομοίωση μίας 
+ουράς M/M/1/10 για τρεις διαφορετικές τιμές του 
+$\lambda = \{ 1, 5, 10\}$.
+
+\begin{enumerate}
+    \item{}
+        Για το $\lambda = 1$ έχουμε τα παρακάτω αποτελέσματα:
+
+        \begin{center}
+            \includegraphics[scale=0.4]{../images/task1ask1_convergence_1.png}
+        \end{center}
+
+        \begin{center}
+            \includegraphics[scale=0.4]{../images/task1ask1_probabilities_1.png}
+        \end{center}
+
+    \item{}
+        Για το $\lambda = 5$ έχουμε τα παρακάτω αποτελέσματα:
+
+        \begin{center}
+            \includegraphics[scale=0.4]{../images/task1ask1_convergence_5.png}
+        \end{center}
+
+        \begin{center}
+            \includegraphics[scale=0.4]{../images/task1ask1_probabilities_5.png}
+        \end{center}
+
+    \item{}
+        Για το $\lambda = 10$ έχουμε τα παρακάτω αποτελέσματα:
+
+        \begin{center}
+            \includegraphics[scale=0.4]{../images/task1ask1_convergence_10.png}
+        \end{center}
+
+        \begin{center}
+            \includegraphics[scale=0.4]{../images/task1ask1_probabilities_10.png}
+        \end{center}
+\end{enumerate}
+
+\subsection{Ερώτημα 2}
+Για την ταχύτητα σύγκλισης για κάθε διαφορετική τιμή του $\lambda$
+έχουμε τα εξής:
+
+\begin{enumerate}
+    \item{}
+        Για το $\lambda = 1$ έχουμε $Transitions = 37000$, $Delay = 0.25$ και $Blocking = 0$
+    \item{}
+        Για το $\lambda = 5$ έχουμε $Transitions = 113000$, $Delay = 1.127178$ και $Blocking = 0.095912$
+    \item{}
+        Για το $\lambda = 10$ έχουμε $Transitions = 400000$, $Delay = 1.810885$ και $Blocking = 0.502224$
+\end{enumerate}
+
+Βλέπουμε ότι με την αύξηση του $\lambda$ αυξάνεται και το πλήθος των
+μεταβάσεων που χρειάζονται για να συγκλίνει το σύστημα. Αυτό σημαίνει
+πως μειώνεται ο χρόνος σύγκλισης, δηλαδή απαιτείται περισσότερος χρόνος 
+ώστε το σύστημα να βγει από τη μεταβατική κατάσταση και να έρθει σε 
+ισορροπία. Αυτό συμβαίνει διότι με την αύξηση του $\lambda$ αυξάνεται
+και το πλήθος των πελατών που εισέρχονται στο σύστημα, παράλληλα όμως
+διατηρείται το $\mu$ σταθερό και προκύπτει bottleneck στο σύστημα το 
+οποίο απαιτεί περισσότερο χρόνο για να απορροφήσει τους πελάτες.
+
+
+\subsection{Ερώτημα 3}
+Οι αλλαγές που πρέπει να γίνουν στον κώδικα είναι ότι κάθε φορά που 
+αλλάζει το current\_state με κάποια προσθαφαίρεση, πρέπει να αλλάζει 
+το $\mu$ σύμφωνα με τον τύπο $\mu_i = \mu (i + 1)$ και με αυτή την 
+αλλαγεί να αλλάζει σαφώς και το threshold για αφίξεις και αναχωρήσεις.\\
+
+Ο κώδικας για όλα τα ερωτήματα φαίνεται παρακάτω:
+
+\lstinputlisting[language=matlab, basicstyle=\tiny, 
+frame=single, backgroundcolor = \color{lightgray}]{../Code/task1ask1.m}
+
+\section{Προσομοίωση 2}
+
+Η μέση καθυστέρηση του συστήματος είναι 0.342785 ενώ η blocking πιθανότητα
+είναι 0.004405.
+
+
+Τα διαγράμματα για την δεύτερη προσομοίωση φαίνονται παρακάτω:
+
+\begin{center}
+    \includegraphics[scale=0.4]{../images/task1ask2_convergence_5.png}
+\end{center}
+
+\begin{center}
+    \includegraphics[scale=0.4]{../images/task1ask2_probabilities_5.png}
+\end{center}
+
+Παρατηρώ ότι η ταχύτητα σύγκλισης είναι μικρότερη από ότι στο σύστημα 
+της πρώτης προσομοίωσης για το ίδιο $\lambda$. Αυτό συμβαίνει διότι
+στο σύστημα οι εξυπηρετητές "κουράζονται" και αυτό επηρεάζει την ταχύτητα
+εξυπηρέτησης και την ταχύτητα σύγκλισης του συστήματος.
+
+Ο κώδικας για τα παραπάνω φαίνεται παρακάτω:
+
+\lstinputlisting[language=matlab, basicstyle=\tiny,
+frame=single, backgroundcolor = \color{lightgray}]{../Code/task1ask2.m}
+
+ 
+
+
+
+
+
+
+\end{document}
