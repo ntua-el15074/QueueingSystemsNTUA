@@ -1,0 +1,323 @@
+\documentclass[12pt]{article}
+\usepackage[greek,english]{babel}
+\usepackage{alphabeta}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{blindtext}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{steinmetz}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tikz}
+\usepackage{fdsymbol}
+\geometry{
+    a4paper,
+    total={170mm,257mm},
+    left=20mm,
+    top=20mm,
+}
+
+\author{Αυγερινός Πέτρος 03115074}
+\title{Συστήματα Αναμονής Άσκηση 4^η}
+\date{}
+
+\begin{document}
+\maketitle 
+\pagebreak
+
+\tableofcontents
+\pagebreak
+
+\section{Ανάλυση και Σχεδιασμός τηλεφωνικού κέντρου}
+
+\subsection{Ερώτημα 1}
+Το διάγραμμα ρυθμού μεταβάσεων ενός συστήματος M/M/c/c είναι το παρακάτω:
+
+\begin{center}
+    \includegraphics[width=0.7\textwidth]{../images/mmcc.png}
+\end{center}
+
+Από τις εξισώσεις ισορροπίας γνωρίζουμε ότι:
+
+\begin{equation}
+    P_k = \frac{\lambda}{\mu k} P_{k-1} = 
+    \frac{\lambda}{\mu k} \cdot \frac{\lambda}{\mu (k-1)} P_{k-2} =
+    \ldots = \frac{(\frac{\lambda}{\mu})^k}{k!} P_0
+\end{equation}
+
+και 
+
+\begin{equation}
+    P_0 + P_1 + \ldots + P_c = 1
+\end{equation}
+
+Από (1) και (2) προκύπτει ότι:
+
+\begin{align*}
+        P_0 + P_1 + \ldots + P_c = 1 \\
+        P_0 + \frac{\lambda}{\mu}P_0 + \ldots + \frac{(\frac{\lambda}{\mu})^c}{c!}P_0 = 1 \\
+        P_0(1 + \frac{\lambda}{\mu} + \ldots + \frac{(\frac{\lambda}{\mu})^c}{c!}) = 1 \\
+        P_0 \sum_{k=0}^{c} \frac{(\frac{\lambda}{\mu})^k}{k!} = 1 \\
+        P_0 = \frac{1}{\sum_{k=0}^{c} \frac{\rho^k}{k!}}
+\end{align*}
+
+Η πιθανότητα απόρριψης είναι ίση με: 
+
+\begin{align*}
+    P_{blocking} = P_c = B(\rho,c) = \frac{(\frac{\lambda}{\mu})^c}{c!} P_0 = \\
+    \frac{\rho^c}{c!} \frac{1}{\sum_{k=0}^{c} \frac{\rho^k}{k!}} \\
+\end{align*}
+
+Ο μέσος ρυθμός απωλειών από την ουρά είναι ίσος με:
+\begin{equation}
+    \lambda - \gamma = \lambda - \lambda (1 - P_{blocking}) = \lambda P_{blocking} = \lambda \frac {\rho^c}{c!} \frac{1}{\sum_{k=0}^{c} \frac{\rho^k}{k!}}
+\end{equation}
+
+Ο κώδικας για την συνάρτηση erlangb\_factorial φαίνεται παρακάτω:
+
+\lstinputlisting[language=matlab, basicstyle=\tiny,
+frame=single, backgroundcolor = \color{lightgray}]{../Code/erlangb_fact.m}
+
+Το αποτέλεσμα του factorial για τις τιμές $9,9$ είναι ίδιες και ίσες με $0.2243$.
+
+\subsection{Ερώτημα 2}
+Για την απόδειξη της iterative formula αρχικά γνωρίζουμε ότι αν δεν υπάρχει 
+εξυπηρετητής όλες οι κλήσεις απορρίπτονται. Επομένως:
+
+\begin{equation}
+    B(\rho,0) = 1
+\end{equation}
+
+Για $c - 1$ εξυπηρετητές έχουμε:
+
+\begin{equation}
+    B(\rho,c-1) = \frac{\rho^{c-1}}{(c-1)!} \frac{1}{\sum_{k=0}^{c-1} \frac{\rho^k}{k!}}
+\end{equation}
+\\
+
+Προσθέτοντας έναν ακόμα εξυπηρετητή έχουμε:
+
+\begin{align*}
+    Β(\rho,c) = \frac{\rho^c}{c!} \frac{1}{\sum_{k=0}^{c} \frac{\rho^k}{k!}} = \\
+    \frac{\frac{\rho^{c-1}\cdot \rho}{(c-1)! \cdot c}}{\frac{\rho^c}{c!} + \sum_{k=0}^{c-1} \frac{\rho^k}{k!}} = \\
+    \frac{\frac{\rho^{c-1}}{(c-1)!} \cdot \frac{\rho}{c}}{\frac{\rho}{c} \cdot \frac{\rho^{c-1}}{(c-1)!} + \sum_{k=0}^{c-1} \frac{\rho^k}{k!}} = \\
+    \frac{B(\rho,c-1) \cdot \frac{\rho}{c}}{B(\rho,c-1) \cdot \frac{\rho}{c} + 1} = \\
+    \frac{\rho \cdot B(\rho,c-1)}{\rho \cdot B(\rho,c-1) + c}
+\end{align*}
+\\
+
+
+
+Ο κώδικας για την συνάρτηση erlangb\_iterative φαίνεται παρακάτω:
+
+\lstinputlisting[language=matlab, basicstyle=\tiny,
+frame=single, backgroundcolor = \color{lightgray}]{../Code/erlangb_it.m}
+
+Η iterative λύση δίνει το ίδιο αποτέλεσμα με το factorial για τις τιμές $9,9$ και είναι
+ίσο με $0.2243$.
+
+\subsection{Ερώτημα 3}
+Στην περίπτωση του factorial παίρνουμε NaN ενώ στην περίπτωση του iterative παίρνουμε 
+το αποτέλεσμα $0.0245243$. Αυτό συμβαίνει γιατί το factorial παίρνει πολύ μεγάλες τιμές
+και υπερχειλίζει.
+
+\subsection{Ερώτημα 4}
+\begin{enumerate}
+    \item{}
+        Η συνολική κυκλοφοριακή ένταση του δικτύου για τον πιο απαιτητικό χρήστη είναι:
+        \begin{equation}
+            \rho = \frac{500 \cdot 23}{60} = 191.66 \text{ Erlangs}
+        \end{equation}
+
+    \item{}
+        Τα διαγράμματα απόρριψης για τις τρεις τιμές λεπτών φαίνονται παρακάτω:
+
+        Για 23 λεπτά:
+        \begin{center}
+            \includegraphics[width=0.5\textwidth]{../images/erlangb-23.png}
+        \end{center}
+
+        Με ζουμ:
+        \begin{center}
+            \includegraphics[width=0.5\textwidth]{../images/erlangb-23-zoom.png}
+        \end{center}
+        \\
+
+        Για 34 λεπτά:
+        \begin{center}
+            \includegraphics[width=0.5\textwidth]{../images/erlangb-34.png}
+        \end{center}
+
+        Με ζουμ:
+        \begin{center}
+            \includegraphics[width=0.5\textwidth]{../images/erlangb-34-zoom.png}
+        \end{center}
+        \\
+
+
+        Για 46 λεπτά:
+        \begin{center}
+            \includegraphics[width=0.5\textwidth]{../images/erlangb-46.png}
+        \end{center}
+
+        Με ζουμ:
+        \begin{center}
+            \includegraphics[width=0.5\textwidth]{../images/erlangb-46-zoom.png}
+        \end{center}
+
+    \item{}
+        Προσθέτοντας μία συνθήκη για πιθανότητα μικρότερη του $0.01$ στον κώδικα βλέπουμε ότι:
+
+        \begin{enumerate}
+            \item{}
+                Για 23 λεπτά, οι εξυπηρετητές που απαιτούνται είναι 8.
+
+            \item{}
+                Για 34 λεπτά, οι εξυπηρετητές που απαιτούνται είναι 17.
+
+            \item{}
+                Για 46 λεπτά, οι εξυπηρετητές που απαιτούνται είναι 54.
+        \end{enumerate}
+\end{enumerate}
+
+\subsection{Ερώτημα 5}
+\begin{enumerate}
+    \item{}
+        Η μέση τιμή της συνολικής προσφερόμενης κίνησης είναι $A = 20000 \cdot 0.06 = 1200$ Erlangs.
+    \item{}
+        Η κίνηση υπεραστικών είναι $Α' = 0.05Α = 60$ Erlangs. Για GoS $0.01$, με χρήση ενός 
+        Erlang B calculator παίρνουμε ότι τα trunks που απαιτούνται είναι $75$.
+
+    \item{}
+        Με τριπλασιασμό του φορτίου η κίνηση υπεραστικών είναι $Α'' = 3Α' = 180$ Erlangs.
+        Με χρήση του Erlang B calculator για $75$ trunks παίρνουμε GoS $0.587$.
+\end{enumerate}
+
+Ο κώδικας για τα παραπάνω ερωτήματα φαίνεται παρακάτω:
+
+\lstinputlisting[language=matlab, basicstyle=\tiny,
+frame=single, backgroundcolor = \color{lightgray}]{../Code/ask1.m}
+\pagebreak
+
+\section{Σύστημα εξυπηρέτησης με δύο ανόμοιους εξυπηρετητές}
+
+\subsection{Ερώτημα 1}
+
+Το διάγραμμα ρυθμών μεταβάσεων στην κατάσταση ισορροπίας για το δοσμένο σύστημα 
+φαίνεται παρακάτω για $\lambda = 2, p = 1$ και $\mu_1 = 1.25, \mu_2 = 0.4$.
+
+\begin{center}
+    \includegraphics[width=0.7\textwidth]{../images/diagram_transfer_rate.png}
+\end{center}
+
+Οι εξισώσεις του συστήματος για ισορροπία είναι: 
+
+\begin{equation}
+    \lambda P_0 = \mu_1 P_{11} + \mu_2 P_{12} \Rightarrow 2P_0 = 1.25P_{11} + 0.4P_{12} 
+\end{equation}
+
+\begin{equation}
+    (\lambda + \mu_1) P_{11}  = p \lambda P_0 + \mu_2 P_2 \Rightarrow 3.25 P_{11} = 2P_0 + 0.4P_2
+\end{equation}
+
+\begin{equation}
+    (\lambda + \mu_2) P_{12} = (1-p) \lambda P_0 + \mu_1 P_2 \Rightarrow 2.4 P_{12} = 1.25P_2
+\end{equation}
+
+\begin{equation}
+    P_0 + P_{11} + P_{12} + P_2 = 1
+\end{equation}
+
+Επιλύοντας το σύστημα προκύπτουν οι εξής εργοδικές πιθανότητες: 
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        $P_0$ & $P_{11}$ & $P_{12}$ & $P_2$ & $P_{blocking}$ \\
+        \hline
+        0.1387 & 0.1435 & 0.2457 & 0.4719 & 0.4719 \\
+        \hline
+    \end{tabular}
+\end{center}
+
+Η πιθανότητα απόρριψης είναι 0.4719. Ο μέσος αριθμός πελάτων στο σύστημα είναι ίσος με:
+
+\begin{equation}
+    L = \sum_{k = 0}^{2} kP_k = P_{11} + P_{12} + 2P_2 = 0.1435 + 0.2457 + 2*0.4719 = 1.333
+\end{equation}
+
+
+
+
+
+
+\subsection{Ερώτημα 2}
+
+Για την συμπλήρωση των thresholds έχουμε:
+
+\begin{enumerate}
+    \item{}
+        Το πρώτο threshold\_1a είναι η πιθανότητα να έχουμε άφιξη ενώ 
+        ο πρώτος εξυπηρετητής, ο 1 σε αυτή την περίπτωση, είναι κατειλημμένος.
+
+        \begin{equation}
+            threshold\_1a = \frac{\lambda}{\lambda + \mu_1}
+        \end{equation}
+    \item{}
+        Το δεύτερο threshold\_1b είναι η πιθανότητα να έχουμε άφιξη ενώ 
+        ο δεύτερος εξυπηρετητής είναι κατειλημμένος.
+
+        \begin{equation}
+            threshold\_1b = \frac{\lambda}{\lambda + \mu_2}
+        \end{equation}
+    \item{}
+        Το τρίτο threshold\_2\_first είναι η πιθανότητα να έχουμε άφιξη ενώ 
+        και οι δύο εξυπηρετητές είναι κατειλημμένοι.
+
+        \begin{equation}
+            threshold\_2a = \frac{\lambda}{\lambda + \mu_1 + \mu_2}
+        \end{equation}
+    \item{}
+        Το τέταρτο threshold\_2\_second είναι η πιθανότητα να έχουμε άφιξη ή 
+        ο πρώτος εξυπηρετητής να απελευθερωθεί. Σε περίπτωση που υπερβούμε 
+        αυτό το threshold τότε ο δεύτερος εξυπηρετητής απελευθερώνεται.
+
+        \begin{equation}
+            threshold\_2b = \frac{\lambda + \mu_1}{\lambda + \mu_1 + \mu_2}
+        \end{equation}
+        
+\end{enumerate}
+\\
+
+Η συνθήκη σύγκλισης είναι μεταξύ δύο διαδοχικών μετρήσεων του μέσου αριθμού πελατών 
+να έχουμε απόκλιση μικρότερη του $0.00001$ και φαίνεται στον κώδικα στην σειρά 
+$38$.\\
+
+Οι εργοδικές πιθανότητες που υπολογίζει η προσομοίωση φαίνονται παρακάτω και είναι 
+σύμφωνες με τις πιθανότητες που υπολογίσαμε με μικρές αποκλίσεις.\\
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        $P_0$ & $P_{11}$ & $P_{12}$ & $P_2$ & $P_{blocking}$ \\
+        \hline
+        0.1392 & 0.1442 & 0.2442 & 0.4724 & 0.4724 \\
+        \hline
+    \end{tabular}
+\end{center}
+
+Ο κώδικας που χρησιμοποιήθηκε για τα παραπάνω είναι ο εξής:
+
+\lstinputlisting[language=matlab, basicstyle=\tiny,
+frame=single, backgroundcolor = \color{lightgray}]{../Code/ask2.m}
+
+
+\end{document}

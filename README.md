@@ -20,4 +20,10 @@ proportional to the time it takes for the system to converge to a steady state a
 the second simulation shows how the server of the queue can impact convergence 
 when he slows down or speeds back up.
 
+## Project 4
+The fourth project is a simulation of telephone center where we analyze and design 
+the workings of it. We make use of the erlang b formula in its factorial and recursive 
+iterations and also an erlang b calculator. The second part of the project is a 
+simulation of a system with two servers that are different and we simulate convergence 
+and the changing of states from empty queue all the way to blocking queue.
 
